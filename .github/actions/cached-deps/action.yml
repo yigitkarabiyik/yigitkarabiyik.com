@@ -18,12 +18,11 @@ runs:
       uses: actions/cache@v3
       with:
         path: frontend/node_modules
-        key: deps-node-modules-${{ hashFiles('./**/package-lock.json') }}
+        key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
     - name: Install dependencies
       id: install
       if: steps.cache.outputs.cache-hit != 'true' || inputs.caching != 'ture'
       run: |
-        cd frontend
-        npm install 
+        npm install:frontend
         echo "cache='${{ inputs.caching }}'">>$GITHUB_OUTPUT
       shell: bash # if you use "run" you have to define with shell where to run you comment
