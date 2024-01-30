@@ -9,17 +9,14 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-      - name: Install Node
-        uses: actions/setup-node@v3
-      - name: Install Dependencies
-        run: npm install
-      - name: Build Project
-        run: npm run build
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
+      - name: Run docker-compose
+        uses: isbang/compose-action@v1.5.1
         with:
-          name: production-files
-          path: dist
+          compose-file: "./docker-compose.yml"
+          up-flags: "--build"
+          down-flags: "--volumes"
+        env:
+          CUSTOM_VARIABLE: "test"
   deploy:
     needs: build-test
     runs-on: ubuntu-latest
