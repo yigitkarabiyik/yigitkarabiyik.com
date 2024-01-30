@@ -1,0 +1,10 @@
+version: '3.2'
+services:
+
+  frontend:
+    restart: always
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
