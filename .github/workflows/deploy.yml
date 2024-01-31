@@ -26,7 +26,7 @@ jobs:
       - name: Output Contents
         run: ls
       - name: Auth to Google Cloud Storage
-        uses: google-github-actions/setup-auth@v2
+        uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
           service_account: ${{ secrets.GCP_SA_EMAIL }}
