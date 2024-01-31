@@ -24,7 +24,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: production-files
-          path: ./dist
+          path: ./build
       - name: Output Contents
         run: ls
       - name: Auth to Google Cloud Storage
