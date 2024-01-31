@@ -18,21 +18,28 @@ jobs:
     needs: build-test
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifacts
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Download Artifacts
         uses: actions/download-artifact@v3
         with:
           name: production-files
           path: ./dist
       - name: Output Contents
         run: ls
-      - name: Deploy to Google Cloud Storage
-        uses: google-github-actions/setup-gcloud@v0
+      - name: Auth to Google Cloud Storage
+        uses: google-github-actions/setup-auth@v2
         with:
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          service_account_email: ${{ secrets.GCP_SA_EMAIL }}
-          project_id: mysite-bucket-1
-
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          service_account: ${{ secrets.GCP_SA_EMAIL }}
+      - name: Google Cloud Setup
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+            project_id: mysite-400505
+      - name: Upload Container to Google Container Registry
+        run: |
+          docker tag app dcr.io/mysite-400505/app
+          docker push app dcr.io/mysite-400505/app
       - name: Deploy via GCS
         run: |
-          gsutil -m rm -rf gs://mysite-bucket-1/* || echo "$?"
-          gsutil -m cp -r ./dist gs://mysite-bucket-1
+          gcloud config set project mySite
