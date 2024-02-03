@@ -1,4 +1,4 @@
-name: Deployment
+name: Build and Push React Image to Google Cloud Platform
 on:
   push:
     branches:
@@ -6,40 +6,38 @@ on:
 jobs:
   build-test:
     runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: mysite
+      PROJECT_ID: mysite-400505
     steps:
+
       - name: Checkout
         uses: actions/checkout@v3
+
       - name: Tests
         uses: cloudposse/github-action-docker-compose-test-run@main
         with:
           file: ./docker-compose.yml
           service: frontend
-  deploy:
-    needs: build-test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Download Artifacts
-        uses: actions/download-artifact@v3
+      
+      - uses: google-github-actions/setup-gcloud@master
         with:
-          name: production-files
-          path: ./build
-      - name: Output Contents
-        run: ls
-      - name: Auth to Google Cloud Storage
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
-          service_account: ${{ secrets.GCP_SA_EMAIL }}
-      - name: Google Cloud Setup
-        uses: google-github-actions/setup-gcloud@v2
-        with:
-            project_id: mysite-400505
-      - name: Upload Container to Google Container Registry
-        run: |
-          docker tag app dcr.io/mysite-400505/app
-          docker push app dcr.io/mysite-400505/app
-      - name: Deploy via GCS
-        run: |
-          gcloud config set project mySite
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ env.PROJECT_ID }}
+          export_default_credentials: true
+
+      - name: Build Docker Image
+        run: docker build -t $IMAGE_NAME:latest .
+
+      - name: Configure Docker Client
+        run: |-
+          gcloud auth configure-docker --quite
+      
+      - name: Push Docker Image to Google Cloud Registry (GCR)
+        env:
+          GIT_TAG: v0.1.0
+        run: |-
+          docker tag $IMAGE_NAME:latest gcr.io/$PROJECT_ID/$IMAGE_NAME:latest
+          docker tag $IMAGE_NAME:latest gcr.io/$PROJECT_ID/$IMAGE_NAME:$GIT_TAG
+          docker push gcr.io/$PROJECT_ID/$IMAGE_NAME:latest
+          docker push gcr.io/$PROJECT_ID/$IMAGE_NAME:GIT_TAG
