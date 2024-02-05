@@ -4,40 +4,24 @@ on:
     branches:
       - main
 jobs:
-  build-test:
+  deploy:
     runs-on: ubuntu-latest
-    env:
-      IMAGE_NAME: mysite
-      PROJECT_ID: mysite-400505
     steps:
 
-      - name: Checkout
+      - name: Code Checkout
         uses: actions/checkout@v3
 
-      - name: Tests
-        uses: cloudposse/github-action-docker-compose-test-run@main
+      - name: Install the gcloud cli
+        uses: google-github-actions/setup-gcloud@v0
         with:
-          file: ./docker-compose.yml
-          service: frontend
-      
-      - uses: google-github-actions/setup-gcloud@master
-        with:
+          project_id: ${{ secrets.GOOGLE_PROJECT }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
-          project_id: ${{ env.PROJECT_ID }}
           export_default_credentials: true
 
-      - name: Build Docker Image
-        run: docker build -t $IMAGE_NAME:latest .
-
-      - name: Configure Docker Client
-        run: |-
-          gcloud auth configure-docker --quite
-      
-      - name: Push Docker Image to Google Cloud Registry (GCR)
+      - name: Build and Push Docker Image
         env:
-          GIT_TAG: v0.1.0
-        run: |-
-          docker tag $IMAGE_NAME:latest gcr.io/$PROJECT_ID/$IMAGE_NAME:latest
-          docker tag $IMAGE_NAME:latest gcr.io/$PROJECT_ID/$IMAGE_NAME:$GIT_TAG
-          docker push gcr.io/$PROJECT_ID/$IMAGE_NAME:latest
-          docker push gcr.io/$PROJECT_ID/$IMAGE_NAME:GIT_TAG
+          GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
+        run: |
+          gcloud auth configure-docker europe-west3-docker.pkg.dev
+          docker build -t europe-west3-docker.pkg.dev/${{secrets.GOOGLE_PROJECT}}/mysite-repo/mysite:latest .
+          docker push europe-west3-docker.pkg.dev/${{secrets.GOOGLE_PROJECT}}/mysite-repo/mysite:latest
