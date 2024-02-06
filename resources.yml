@@ -29,4 +29,4 @@ spec:
     spec:
       containers:
       - name: mysite
-        image: us-central1-docker.pkg.dev/GOOGLE_PROJECT/demo/mysite:latest
+        image: europe-west3-docker.pkg.dev/GOOGLE_PROJECT/demo/mysite:latest
