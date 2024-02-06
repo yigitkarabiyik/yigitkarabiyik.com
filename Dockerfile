@@ -4,9 +4,6 @@ FROM node:16
 # Çalışma dizinini ayarla
 WORKDIR /app
 
-ENV PORT 3000
-ENV HOST 0.0.0.0
-
 # Install app dependencies
 COPY package*.json ./
 RUN npm install
@@ -18,7 +15,5 @@ COPY . .
 RUN npm run build
 
 # Serve the app using serve
-#RUN npm install -g serve
-#CMD [ "server", "-s", "build", "-l", "3000"]
-
-CMD ["npm", "start"]
+RUN npm install -g serve
+CMD [ "server", "-s", "build", "-l", "80"]
