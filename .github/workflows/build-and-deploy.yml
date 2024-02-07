@@ -39,7 +39,7 @@ jobs:
         with:
           region: europe-west3
           service: ${{ secrets.GOOGLE_SERVICE }}
-          image: gcr.io/cloudrun/${{ secrets.GOOGLE_SERVICE }}
+          image: europe-west3-docker.pkg.dev/${{secrets.GOOGLE_PROJECT}}/mysite-repo/mysite:latest
 
       - name: 'Use output'
         run: 'curl "${{ steps.deploy.outputs.url }}"'
