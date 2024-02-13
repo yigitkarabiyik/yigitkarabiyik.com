@@ -31,17 +31,10 @@ jobs:
       # Deploy to Google Cloud Run
       - name: Deployt to Google Cloud Run
         id: 'deploy'
-        uses: 'google-github-actions/deploy-cloudrun@v2'
-        with:
-          image: europe-west3-docker.pkg.dev/${{secrets.GOOGLE_PROJECT}}/mysite-repo/mysite:latest
-          region: europe-west3
-          service: ${{ secrets.GOOGLE_SERVICE }}
-
-      - name: Get Cloud Run service URL
-        id: get-service-url
-        uses: google-github-actions/deploy-cloudrun@v1
-        with:
-          print-service-url: true
+        run: |
+          gcloud run deploy ${{ secrets.GOOGLE_SERVICE }} --image \
+          europe-west3-docker.pkg.dev/${{secrets.GOOGLE_PROJECT}}/mysite-repo/mysite:latest \
+          --platform managed --region europe-west3 --allow-unauthenticated
 
       - name: 'Use output'
         run: 'curl "${{ steps.deploy.outputs.url }}"'
