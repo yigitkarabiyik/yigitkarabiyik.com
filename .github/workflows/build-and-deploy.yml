@@ -12,16 +12,14 @@ jobs:
       - name: Code Checkout
         uses: actions/checkout@v3
 
-      # Authantication
-      - name: Authantication to Google Cloud Platform
-        uses: google-github-actions/auth@v2
-        with:
-          service_account: ${{ secrets.GCP_SA_EMAIL}}
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
-
       # Set up Cloud SDK
       - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v2'
+        uses: 'google-github-actions/setup-gcloud@v0'
+        with:
+          project_id: ${{ secrets.GOOGLE_PROJECT }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          install_components: 'gke-gcloud-auth-plugin' # Deployment
+          export_default_credentials: true
 
       # Push Docker to Artifact Registry
       - name: Build and Push Docker Image
