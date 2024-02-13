@@ -28,6 +28,7 @@ jobs:
         env:
           GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
         run: |
+          gcloud auth list --filter=status:ACTIVE --format="value(account)"
           gcloud auth configure-docker europe-west3-docker.pkg.dev
           docker build -t europe-west3-docker.pkg.dev/${{secrets.GOOGLE_PROJECT}}/mysite-repo/mysite:latest .
           docker push europe-west3-docker.pkg.dev/${{secrets.GOOGLE_PROJECT}}/mysite-repo/mysite:latest
@@ -36,6 +37,7 @@ jobs:
       - name: Deployt to Google Cloud Run
         id: 'deploy'
         run: |
+          gcloud auth list --filter=status:ACTIVE --format="value(account)"
           gcloud run deploy ${{ secrets.GOOGLE_SERVICE }} --image \
           europe-west3-docker.pkg.dev/${{secrets.GOOGLE_PROJECT}}/mysite-repo/mysite:latest \
           --platform managed --region europe-west3 --allow-unauthenticated
