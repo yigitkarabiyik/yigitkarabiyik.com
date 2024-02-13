@@ -28,7 +28,7 @@ jobs:
         env:
           GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
         run: |
-          gcloud auth configure-docker --quiet
+          gcloud auth configure-docker europe-west3-docker.pkg.dev
           docker build -t europe-west3-docker.pkg.dev/${{secrets.GOOGLE_PROJECT}}/mysite-repo/mysite:latest .
           docker push europe-west3-docker.pkg.dev/${{secrets.GOOGLE_PROJECT}}/mysite-repo/mysite:latest
       
