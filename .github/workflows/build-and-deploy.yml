@@ -31,12 +31,10 @@ jobs:
           docker push europe-west3-docker.pkg.dev/${{secrets.GOOGLE_PROJECT}}/mysite-repo/mysite:latest
       
       # Deploy to Google Cloud Run
-      - name: Deployt to Google Cloud Run
+      - name: Deploy to Google Cloud Run
         id: 'deploy'
         run: |
-          gcloud run deploy ${{ secrets.GOOGLE_SERVICE }} --image \
-          europe-west3-docker.pkg.dev/${{secrets.GOOGLE_PROJECT}}/mysite-repo/mysite:latest \
-          --platform managed --region europe-west3 --allow-unauthenticated
+          gcloud run deploy ${{ secrets.GOOGLE_SERVICE }} --image europe-west3-docker.pkg.dev/${{secrets.GOOGLE_PROJECT}}/mysite-repo/mysite:latest --platform managed --region europe-west3 --allow-unauthenticated
 
       - name: 'Use output'
         run: 'curl "${{ steps.deploy.outputs.url }}"'
