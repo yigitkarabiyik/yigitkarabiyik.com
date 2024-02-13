@@ -19,6 +19,10 @@ jobs:
           service_account: ${{ secrets.GCP_SA_EMAIL}}
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
+      # Set up Cloud SDK
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+
       # Push Docker to Artifact Registry
       - name: Build and Push Docker Image
         env:
