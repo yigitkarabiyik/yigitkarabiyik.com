@@ -16,7 +16,7 @@ jobs:
       - name: Authantication to Google Cloud Platform
         uses: google-github-actions/auth@v2
         with:
-          credentials-json: ${{ secrets.GCP_SA_KEY }}
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
       # Push Docker to Artifact Registry
       - name: Build and Push Docker Image
