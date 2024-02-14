@@ -12,10 +12,14 @@ RUN npm install
 COPY . .
 
 # Build the app for production
-#RUN npm run build
+RUN npm run build
 
 # Serve the app using serve
 #RUN npm install -g serve
 #CMD [ "server", "-s", "build", "-l", "80"]
 
-CMD [ "npm", "start" ]
+#CMD [ "npm", "start" ]
+
+FROM nginx:1.19
+COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+COPY --from=build /app/build /usr/share/nginx/html
