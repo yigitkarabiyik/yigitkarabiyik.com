@@ -14,6 +14,8 @@ COPY . .
 # Build the app for production
 RUN npm run build
 
+EXPOSE 3000
+
 # Serve the app using serve
 RUN npm install -g serve
 CMD [ "server", "-s", "build", "-l", "3000"]
