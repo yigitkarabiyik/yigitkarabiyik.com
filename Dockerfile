@@ -12,10 +12,10 @@ RUN npm install
 COPY . .
 
 # Build the app for production
-RUN npm run build
-
-EXPOSE 3000
+#RUN npm run build
 
 # Serve the app using serve
-RUN npm install -g serve
-CMD [ "server", "-s", "build", "-l", "3000"]
+#RUN npm install -g serve
+#CMD [ "server", "-s", "build", "-l", "80"]
+
+CMD [ "npm", "start" ]
