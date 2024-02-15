@@ -34,4 +34,4 @@ jobs:
       - name: Deploy to Google Cloud Run
         id: 'deploy'
         run: |
-          gcloud run deploy ${{ secrets.GOOGLE_SERVICE }} --image ${{secrets.GOOGLE_REGION}}-docker.pkg.dev/${{secrets.GOOGLE_PROJECT_ID}}/${{secrets.GOOGLE_REPOSITORY_NAME}}/${{ secrets.GOOGLE_PROJECT_ID }}:latest --platform managed --region europe-west3 --allow-unauthenticated
+          gcloud run deploy ${{ secrets.GOOGLE_SERVICE }} --image ${{secrets.GOOGLE_REGION}}-docker.pkg.dev/${{secrets.GOOGLE_PROJECT_ID}}/${{secrets.GOOGLE_REPOSITORY_NAME}}/${{ secrets.GOOGLE_PROJECT_ID }}:latest --platform managed --region ${{ secrets.GOOGLE_REGION }} --allow-unauthenticated
