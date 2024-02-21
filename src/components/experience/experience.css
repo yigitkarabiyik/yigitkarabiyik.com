@@ -4,6 +4,19 @@
     gap: 2rem;
 }
 
+.experience__languages {
+    grid-column: 1 / 2;
+    grid-row: 1;
+}
+.experience__frameworks {
+    grid-column: 2 /2;
+    grid-row: 1;
+}
+.experience__tools {
+    grid-column: 1 / 3;
+    grid-row: 2;
+}
+
 .experience__container>div {
     background: var(--color-bg-variant);
     padding: 2.4rem 5rem;
